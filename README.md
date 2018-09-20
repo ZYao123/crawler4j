@@ -1,5 +1,3 @@
 #crawler4j
-Ò»¸öÁ·Ï°demo<br/>
-¿ÉÓÃÓÚ´Ó<a>http://desk.zol.com.cn</a>ÉÏÅÀÈ¥Í¼Æ¬Á´½Ó²¢ÏÂÔØµ½±¾µØ´¢´æ<br/>
-×¢½âÆëÈ«¿É¹©²Î¿¼<br/>
-(ÕâÅÀ³æ¹úÄÚÎÄµµÕæÐÄÉÙ¨r(¨s¨Œ¨t)¨q)
+çˆ¬è™«ç»ƒä¹ demo<br/>
+(è¿™çˆ¬è™«å›½å†…æ–‡æ¡£çœŸå¿ƒå°‘â•®(â•¯â–½â•°)â•­)
