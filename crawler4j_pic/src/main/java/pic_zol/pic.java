@@ -46,8 +46,8 @@ public class pic {
 
         controller.addSeed("http://desk.zol.com.cn/1920x1080/");// 传入种子 要爬取的网址,可添加多个
 
-        /**
-         * 若目录不存在，创建目录
+        /*
+          若目录不存在，创建目录
          */
         File file = new File(picCrawler.path);
         if (!file.exists()) {
