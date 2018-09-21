@@ -1,4 +1,4 @@
-package pic_zol;
+package zolpic;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;

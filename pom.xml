@@ -10,7 +10,10 @@
         <module>crawler4j_weiBo</module>
         <module>crawler4j_pic</module>
     </modules>
-
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/edu.uci.ics/crawler4j -->
         <dependency>
