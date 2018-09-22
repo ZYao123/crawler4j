@@ -18,7 +18,7 @@ public class juzi {
     public static void main(String[] args) throws Exception {
         String crawlStorageFolder = "D:/data";// crawler4j文件存储位置
 
-        int numberOfCrawlers = 3;// 线程数量
+        int numberOfCrawlers = 10;// 线程数量
         //浏览器头文件
         CrawlConfig config = new CrawlConfig();
         HashSet<BasicHeader> collections = new HashSet<BasicHeader>();
@@ -36,7 +36,7 @@ public class juzi {
         config.setMaxPagesToFetch(-1);//最大爬取页面数量
         config.setPolitenessDelay(200);//爬取延迟，默认200
         config.setCrawlStorageFolder(crawlStorageFolder);// 配置信息设置
-        config.setMaxDepthOfCrawling(4);// 最大爬取深度
+        config.setMaxDepthOfCrawling(-1);// 最大爬取深度
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);

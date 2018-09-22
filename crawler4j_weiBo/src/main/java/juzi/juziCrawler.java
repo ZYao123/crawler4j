@@ -11,11 +11,17 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class juziCrawler extends WebCrawler {
     private static final Logger logger = LoggerFactory.getLogger(juziCrawler.class);
-
+    PreparedStatement ps = null;
+    databaseManager manager = null;
+    private static int count = 0;
     /**
      * 正则表达式匹配指定的后缀文件
      */
@@ -27,8 +33,14 @@ public class juziCrawler extends WebCrawler {
      */
     @Override
     public void onStart() {
-        super.onStart();
+        this.manager = databaseManager.getManager();
+        try {
+            this.ps = this.manager.getPs("INSERT INTO toy (content, author,time) VALUES (?, ?, ?)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * 这个方法主要是决定哪些url我们需要抓取，返回true表示是我们需要的，返回false表示不是我们需要的Url
@@ -48,7 +60,6 @@ public class juziCrawler extends WebCrawler {
      */
     @Override
     public void visit(Page page) {
-        System.out.println(page.getWebURL().getURL());
         // 判断page是否为真正的网页
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
@@ -63,18 +74,35 @@ public class juziCrawler extends WebCrawler {
             }
             for (Element element : elements) {
                 System.out.println("------------------------------");
-                if(element.text().equals(""))
-                    logger.warn("///////////////////////////");
-//                System.out.println(element.text());
-                Elements content = element.select(".xlistju");
-                if(content.text().equals(""))
+                if (element.text().equals("")) {
+                    logger.warn("element为空");
                     return;
-                Elements auther = element.select(".views-field-field-oriwriter-value");
-                Elements from = element.select(".active");
-                System.out.println(content.text());
-
-                System.out.println(auther.text());
-                System.out.println(from.text());
+                }
+                Elements content = element.select(".xlistju");
+                if (content.text().equals(""))//排除没有句子的
+                    return;
+                Elements author = element.select(".views-field-field-oriwriter-value");
+                Elements title = element.select(".active");
+                String from = "";
+                if (!author.text().equals("")) {
+                    from += author.text();
+                }
+                if (!title.text().equals("")) {
+                    from += "《" + title.text() + "》";
+                }
+                if (from.equals(""))//放弃没有作者的
+                    return;
+                Date currentTime = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time = formatter.format(currentTime).toString();
+                String[] str = {content.text(), from, time};
+                try {
+                    manager.insert(this.ps, str);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                count++;//爬取计数
+                System.out.println(count + ":" + content.text() + "——" + from);
             }
         }
     }

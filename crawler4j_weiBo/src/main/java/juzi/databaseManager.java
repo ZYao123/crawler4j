@@ -1,22 +1,34 @@
 package juzi;
 
-import com.sun.xml.internal.bind.v2.TODO;
 
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 
 public class databaseManager {
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://192.144.129.146/test";
+    private static final Logger logger = LoggerFactory.getLogger(databaseManager.class);
+    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    static final String DB_URL = "jdbc:mysql://192.144.129.146/test?useUnicode=true&characterEncoding=UTF-8";
 
     // Database credentials
-    static final String USER = "root";
-    static final String PASS = "Ridcax";
+    static final String USER = "your acconut and password";
+    static final String PASS = "your acconut and password";
 
     Connection conn = null;
+    private static databaseManager manager = new databaseManager();
 
-    public databaseManager() {
+    public static databaseManager getManager() {
+        if (manager == null)
+            logger.error("manager is null");
+        return manager;
+    }
+
+    private databaseManager() {
         try {
             //STEP 2: Register JDBC driver
             Class.forName(JDBC_DRIVER);
