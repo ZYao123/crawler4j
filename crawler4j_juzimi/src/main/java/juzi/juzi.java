@@ -18,7 +18,7 @@ public class juzi {
     public static void main(String[] args) throws Exception {
         String crawlStorageFolder = "D:/data";// crawler4j文件存储位置
 
-        int numberOfCrawlers = 10;// 线程数量
+        int numberOfCrawlers = 5;// 线程数量
         //浏览器头文件
         CrawlConfig config = new CrawlConfig();
         HashSet<BasicHeader> collections = new HashSet<BasicHeader>();

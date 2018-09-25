@@ -7,8 +7,9 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
-        <module>crawler4j_weiBo</module>
         <module>crawler4j_pic</module>
+        <module>crawler4j_juzimi</module>
+        <module>crawler4j_ip</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

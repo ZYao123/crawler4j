@@ -1,4 +1,4 @@
-package juzi;
+package ip;
 
 
 import org.slf4j.Logger;
@@ -16,8 +16,8 @@ public class databaseManager {
     static final String DB_URL = "jdbc:mysql://192.144.129.146/test?useUnicode=true&characterEncoding=UTF-8";
 
     // Database credentials
-    static final String USER = "your acconut and password";
-    static final String PASS = "your acconut and password";
+    static final String USER = "root";
+    static final String PASS = "Ridcax";
 
     Connection conn = null;
     private static databaseManager manager = new databaseManager();

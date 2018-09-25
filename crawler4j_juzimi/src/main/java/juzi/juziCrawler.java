@@ -51,8 +51,8 @@ public class juziCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();// 得到小写的url
-        return !FILTERS.matcher(href).matches(); // 正则匹配，过滤掉我们不需要的后缀文件
-//                && href.startsWith("https://m.weibo.cn");// 只接受以“http://desk.zol.com.cn”开头的url
+        return !FILTERS.matcher(href).matches() // 正则匹配，过滤掉我们不需要的后缀文件
+                && href.startsWith("https://www.juzimi.com");// 只接受以“http://desk.zol.com.cn”开头的url
     }
 
     /**
