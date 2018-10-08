@@ -64,11 +64,17 @@ public class ipCrawler extends WebCrawler {
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();// 页面html内容
+            System.out.println("++++++++++++++++++++++++++++++++++++++++");
+            System.out.println(html);
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++ +++++++");
             Document doc = Jsoup.parse(html);// 采用jsoup解析html，这个大家不会可以简单搜一下
 
             // 使用选择器的时候需要了解网页中的html规则，自己去网页中F12一下，
-            Elements tbody = doc.select("tbody");
-            Elements trs = tbody.select("tr");
+//            Elements tbody = doc.select("tbody");
+            Elements trs = doc.select("tr").select(".odd");
+            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+            System.out.println(trs);
+            System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
             for (Element element : trs) {
                 System.out.println("------------------------------");
                 Elements tds = element.select("td");
@@ -83,13 +89,14 @@ public class ipCrawler extends WebCrawler {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String time = formatter.format(currentTime).toString();
                 String[] str = {ip, port, address, hide, type, time};
-                try {
-                    manager.insert(this.ps, str);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                count++;//爬取计数
-                System.out.println(count + ":" + ip);
+                System.out.println(ip + "______" + port);
+//                try {
+//                    manager.insert(this.ps, str);
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//                count++;//爬取计数
+//                System.out.println(count + ":" + ip);
             }
         }
     }
