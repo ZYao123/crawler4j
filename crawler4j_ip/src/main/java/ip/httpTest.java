@@ -36,7 +36,7 @@ public class httpTest {
         get.setConfig(requestConfig);
         get.setHeader("User-Agent", "Mozilla/5.0  (Windows  NT  6.1;  Win64;  x64;  rv:50.0)  Gecko/20100101  Firefox/50.0");
         long t1 = System.currentTimeMillis();
-        HttpResponse response = null;
+        HttpResponse response;
         try {
             response = client.execute(get);
         } catch (IOException e) {
