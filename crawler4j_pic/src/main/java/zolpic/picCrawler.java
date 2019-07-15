@@ -1,12 +1,9 @@
 package zolpic;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
@@ -23,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 public class picCrawler extends WebCrawler {
     private static final Logger logger = LoggerFactory.getLogger(picCrawler.class);
-    static String path = "D:/pic/test/";//文件保存目录，结尾一定要加 /
+    static String path = "D:/pic/bing/";//文件保存目录，结尾一定要加 /
 
     /**
      * 正则表达式匹配指定的后缀文件
@@ -51,7 +48,7 @@ public class picCrawler extends WebCrawler {
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();// 得到小写的url
         return !FILTERS.matcher(href).matches() // 正则匹配，过滤掉我们不需要的后缀文件
-                && href.startsWith("http://desk.zol.com.cn");// 只接受以“http://desk.zol.com.cn”开头的url
+                && href.startsWith("https://bing.ioliu.cn");// 只接受以“http://desk.zol.com.cn”开头的url
     }
 
     /**
@@ -64,16 +61,16 @@ public class picCrawler extends WebCrawler {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             String html = htmlParseData.getHtml();// 页面html内容
             Document doc = Jsoup.parse(html);// 采用jsoup解析html，这个大家不会可以简单搜一下
-
             // 使用选择器的时候需要了解网页中的html规则，自己去网页中F12一下，
             Elements elements = doc.select("img");
             if (elements.size() == 0) {
                 return;
             }
             for (Element element : elements) {
-                Elements str = element.select("#bigImg");
+                Elements str = element.select(".progressive__img");
                 String src = str.attr("src");
-                src = src.replaceFirst("s960x600", "s1920x1080");//根据zol的url规则，选择下载壁纸的分辨率
+                System.out.println(src);
+//                src = src.replaceFirst("s960x600", "s1920x1080");//根据zol的url规则，选择下载壁纸的分辨率
                 if (!src.equals("")) {
                     logger.info(src);
                     downloadPicture(src);
@@ -83,36 +80,43 @@ public class picCrawler extends WebCrawler {
     }
 
     //下载图片
-    private static void downloadPicture(String url) {
-        int imageNumber = 0;
+    public static void downloadPicture(String urlStr) {
+        // 下载网络文件
+        int bytesum = 0;
+        int byteread = 0;
 
         try {
-            DataInputStream dataInputStream = new DataInputStream(new URL(url).openStream());
-            //截取url作为文件名
-            int end = url.lastIndexOf(".");
-            int start = url.substring(0, end).lastIndexOf("/");
-            String imageName = path + url.substring(start + 1);//图片储存目录+文件名
+            URL url = new URL(urlStr);
+            URLConnection conn = url.openConnection();
+            conn.setConnectTimeout(30000);
+            conn.setReadTimeout(30000);
+            conn.setRequestProperty("Host", "paper.cnstock.com");
+            conn.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0");
+            conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            conn.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
+            conn.setRequestProperty("Accept-Encoding", "utf8, deflate");//注意编码，gzip可能会乱码
+            conn.setRequestProperty("Content-Encoding", "utf8");
+            conn.setRequestProperty("Connection", "keep-alive");
+            conn.setRequestProperty("Upgrade-Insecure-Requests", "1");
+            conn.setRequestProperty("Cookie", "__cfduid=d9837e63adcbbdcb7f4d55c844dd305d61563170940; _ga=GA1.2.1483881517.1563170941; _gid=GA1.2.788615789.1563170941; _gat_gtag_UA_61934506_5=1");
+            conn.setRequestProperty("Cache-Control", "max-age=0");
+//            conn.setRequestProperty("Content-Type", "application/pdf");
 
-            File file = new File(imageName);
-            if (file.exists()) {
-                logger.warn("文件已存在@" + imageName);
-                return;
-            }
+            InputStream inStream = conn.getInputStream();
+            String u = conn.getURL().toString();
+            String fileName = u.substring(u.lastIndexOf("/") + 1);
+            FileOutputStream fs = new FileOutputStream(path + fileName);
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1204];
             int length;
-
-            while ((length = dataInputStream.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
+            while ((byteread = inStream.read(buffer)) != -1) {
+                bytesum += byteread;
+                fs.write(buffer, 0, byteread);
             }
-            byte[] context = output.toByteArray();
-            fileOutputStream.write(output.toByteArray());
-            dataInputStream.close();
-            fileOutputStream.close();
-        } catch (MalformedURLException e) {
+            inStream.close();
+            fs.close();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
