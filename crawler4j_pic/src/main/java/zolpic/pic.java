@@ -50,10 +50,10 @@ public class pic {
           若目录不存在，创建目录
          */
         File file = new File(picCrawler.path);
-        if (!file.exists()) {
+        if (!file.mkdirs()) {
             logger.info(file.mkdir() ? "目录创建成功" : "目录创建失败");
+        } else {
+            controller.start(picCrawler.class, numberOfCrawlers);// 开始运行
         }
-
-        controller.start(picCrawler.class, numberOfCrawlers);// 开始运行
     }
 }
